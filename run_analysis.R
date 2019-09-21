@@ -61,5 +61,40 @@ merged_dataset <- cbind(subject_merged, y_train_test, x_train_test)
 
 # Step 2 - Extracts only the measurements on the mean and standard deviation for each measurement.
 
-tidy_dataset <- merged_dataset %>%
+dataset_mean_std <- merged_dataset %>%
   select(subject, code, contains("mean"), contains("std"))
+
+
+
+# Step 3 - Uses descriptive activity names to name the activities in the data set
+
+activity_labels <- activity_labels %>% pull(2)
+
+levels(dataset_mean_std$code) <- activity_labels
+
+
+
+# Step 4 - Appropriately labels the data set with descriptive variable names.
+name_new <- names(dataset_mean_std)
+name_new <- gsub("[(][)]", "", name_new)
+name_new <- gsub("^t", "TimeDomain_", name_new)
+name_new <- gsub("^f", "FrequencyDomain_", name_new)
+name_new <- gsub("Acc", "Accelerometer", name_new)
+name_new <- gsub("Gyro", "Gyroscope", name_new)
+name_new <- gsub("Mag", "Magnitude", name_new)
+name_new <- gsub("-mean-", "_Mean_", name_new)
+name_new <- gsub("-std-", "_StandardDeviation_", name_new)
+name_new <- gsub("-", "_", name_new)
+names(dataset_mean_std) <- name_new
+
+# Step 5 - From the data set in step 4, creates a second, independent tidy data
+# set with the average of each variable for each activity and each subject.
+
+tidy_data_average <-
+  dataset_mean_std %>%
+  group_by(subject, code) %>%
+  summarise_at(-(1:3), mean, na.rm = T)
+
+# Save dataset
+
+write.table(tidy_data_average , file="dataset_tidy.txt", row.names = FALSE)
