@@ -1,5 +1,6 @@
 # Load libraries
 library(tidyverse)
+library(janitor)
 
 # Download the raw data
 url <-
@@ -88,11 +89,13 @@ name_new <- gsub("-std-", "_StandardDeviation_", name_new)
 name_new <- gsub("-", "_", name_new)
 names(dataset_mean_std) <- name_new
 
+tidy_dataset <- dataset_mean_std %>% janitor::clean_names()
+
 # Step 5 - From the data set in step 4, creates a second, independent tidy data
 # set with the average of each variable for each activity and each subject.
 
 tidy_data_average <-
-  dataset_mean_std %>%
+  tidy_dataset %>%
   group_by(subject, code) %>%
   summarise_at(-(1:3), mean, na.rm = T)
 
