@@ -68,9 +68,10 @@ dataset_mean_std <- merged_dataset %>%
 
 # Step 3 - Uses descriptive activity names to name the activities in the data set
 
-activity_labels <- activity_labels %>% pull(2)
 
-levels(dataset_mean_std$code) <- activity_labels
+dataset_mean_std$code <- factor(dataset_mean_std$code,
+                                 levels = activity_labels[, 1],
+                                labels = activity_labels[, 2])
 
 
 
