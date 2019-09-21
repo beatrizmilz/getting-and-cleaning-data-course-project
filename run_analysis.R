@@ -70,7 +70,7 @@ dataset_mean_std <- merged_dataset %>%
 
 
 dataset_mean_std$code <- factor(dataset_mean_std$code,
-                                 levels = activity_labels[, 1],
+                                levels = activity_labels[, 1],
                                 labels = activity_labels[, 2])
 
 
@@ -98,4 +98,4 @@ tidy_data_average <-
 
 # Save dataset
 
-write.table(tidy_data_average , file="dataset_tidy.txt", row.names = FALSE)
+write.table(tidy_data_average , file = "dataset_tidy.txt", row.names = FALSE)
